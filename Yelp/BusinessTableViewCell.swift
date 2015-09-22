@@ -40,6 +40,10 @@ class BusinessTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
+        distanceLabel.preferredMaxLayoutWidth = distanceLabel.frame.size.width
+        reviewsLabel.preferredMaxLayoutWidth = reviewsLabel.frame.size.width
+        addressLabel.preferredMaxLayoutWidth = addressLabel.frame.size.width
+        categoriesLabel.preferredMaxLayoutWidth = categoriesLabel.frame.size.width
         
     }
 
