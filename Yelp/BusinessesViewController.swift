@@ -8,9 +8,10 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchBarDelegate {
 
     var businesses: [Business]!
+    var searchBar: UISearchBar!
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -30,6 +31,11 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             }
         })
         
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.sizeToFit()
+        navigationItem.titleView = searchBar
+        
 //        Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
 //            self.businesses = businesses
 //            
@@ -38,6 +44,45 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 //                print(business.address!)
 //            }
 //        }
+    }
+    
+    
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
+        return true;        
+    }
+    
+    
+    
+    func searchBarShouldEndEditing(searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(false, animated: true)
+        return true;
+    }
+    
+    
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+    
+    
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        let searchText = searchBar.text
+        searchBar.resignFirstResponder()
+        doSearch(searchText!)
+    }
+    
+    
+    
+    private func doSearch(searchText: String) {
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        Business.searchWithTerm(searchText, completion: {(businesses, error) -> Void in
+            self.businesses = businesses
+            self.tableView.reloadData()
+        })
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
